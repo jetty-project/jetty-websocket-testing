@@ -3,6 +3,7 @@ package org.eclipse.jetty.test.websocket.clients;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 public class StressConnectManyClients
@@ -12,7 +13,7 @@ public class StressConnectManyClients
         try
         {
             URI uri = new URI("ws://localhost:28282/");
-            int count = 50;
+            int count = 500;
             if (args != null)
             {
                 if (args.length >= 1)
@@ -34,13 +35,16 @@ public class StressConnectManyClients
 
     private void start(URI uri, int count) throws Exception
     {
+        int success = 0;
+        int failure = 0;
+
         WebSocketClient client = new WebSocketClient();
         try
         {
             // start client lifecycle
             client.start();
 
-            System.out.printf("Attempting to connect %d times to %s%n",count,uri);
+            System.err.printf("Attempting to connect %d times to %s%n",count,uri);
             for (int i = 0; i < count; i++)
             {
                 ReadSingleTextSocket socket = new ReadSingleTextSocket();
@@ -48,11 +52,15 @@ public class StressConnectManyClients
                 try
                 {
                     String message = socket.readMessage(2,TimeUnit.SECONDS);
-                    System.out.printf("[%d] Server Message -> \"%s\"%n",i,message);
+                    success++;
+                    System.err.printf("[%d] Server Message -> \"%s\"%n",i,message);
                 }
                 catch (RuntimeException e)
                 {
-                    System.out.printf("[%d] Failed to read message from server: %s%n",i,e.getMessage());
+                    failure++;
+                    Session session = socket.getSession();
+                    int port = session.getLocalAddress().getPort();
+                    System.err.printf("[%d] Failed to read message from server: %s (client port %d)%n",i,e.getMessage(),port);
                 }
             }
         }
@@ -60,6 +68,9 @@ public class StressConnectManyClients
         {
             client.stop();
             System.out.printf("Client stopped%n",uri);
+            System.out.printf("Run Results:%n");
+            System.out.printf("    Success: %d%n",success);
+            System.out.printf("    Failure: %d%n",failure);
         }
     }
 }

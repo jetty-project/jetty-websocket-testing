@@ -9,20 +9,24 @@ public class ReadSingleTextSocket extends WebSocketAdapter
 {
     private CountDownLatch latch = new CountDownLatch(1);
     private String message;
-    
+
+    @Override
     public void onWebSocketText(String message)
     {
         this.message = message;
         latch.countDown();
     }
-    
+
     public String readMessage(int timeout, TimeUnit unit)
     {
         try
         {
-            if(latch.await(timeout,unit)) {
+            if (latch.await(timeout,unit))
+            {
                 return this.message;
-            } else {
+            }
+            else
+            {
                 throw new RuntimeException("Read timed out");
             }
         }
