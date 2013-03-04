@@ -13,7 +13,7 @@ public class StressConnectManyClients
         try
         {
             URI uri = new URI("ws://localhost:28282/");
-            int count = 500;
+            int count = 1000;
             if (args != null)
             {
                 if (args.length >= 1)
