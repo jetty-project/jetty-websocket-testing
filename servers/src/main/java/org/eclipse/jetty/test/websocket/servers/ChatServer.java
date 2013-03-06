@@ -15,7 +15,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 public class ChatServer extends WebSocketAdapter
 {
-    public static final boolean IS_ASYNC = true; // change this flag
+    public static final boolean IS_ASYNC = false; // change this flag
     static CopyOnWriteArraySet<Session> s = new CopyOnWriteArraySet<>();
 
     public static void main(String[] args) throws Exception
@@ -27,6 +27,7 @@ public class ChatServer extends WebSocketAdapter
                 @Override
                 public void configure(WebSocketServletFactory factory)
                 {
+                    factory.getPolicy().setIdleTimeout(1500);
                     factory.setCreator(new WebSocketCreator()
                     {
                         @Override
@@ -49,18 +50,51 @@ public class ChatServer extends WebSocketAdapter
         }
     }
 
+    private String remoteId = "<unconnected>";
+    private Session session;
+
+    private void debug(String format, Object... args)
+    {
+        System.out.printf("[" + remoteId + "] " + format + "%n",args);
+    }
+
+    @Override
+    public void onWebSocketClose(int statusCode, String reason)
+    {
+        debug(" ## Close: [%d,%s]",statusCode,reason);
+        s.remove(this.session);
+        remoteId = "<unconnected>";
+    }
+
     @Override
     public void onWebSocketConnect(Session sess)
     {
+        this.session = sess;
+        this.remoteId = session.getRemoteAddress().toString();
+        debug(" ## Connect: %s",sess);
         s.add(sess);
+    }
+
+    @Override
+    public void onWebSocketError(Throwable cause)
+    {
+        debug(" ## Error: ");
+        cause.printStackTrace();
+        s.remove(this.session);
     }
 
     @Override
     public void onWebSocketText(final String message)
     {
-        System.out.println(message);
+        debug(message);
         for (final Session ses : s)
         {
+            if (!ses.isOpen())
+            {
+                debug("Skipping non-open session: %s",ses.getRemoteAddress());
+                continue; // skip non-open sessions (let onClose/onError take care of removing it)
+            }
+
             if (IS_ASYNC)
             {
                 ses.getRemote().sendStringByFuture(message);
