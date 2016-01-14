@@ -12,7 +12,9 @@ import org.eclipse.jetty.test.websocket.servers.browser.BrowserTrackingConfigura
 import org.eclipse.jetty.test.websocket.servers.commands.BrowserInfoCommand;
 import org.eclipse.jetty.test.websocket.servers.commands.CategoriesCommand;
 import org.eclipse.jetty.test.websocket.servers.commands.CategoryConfigsCommand;
+import org.eclipse.jetty.test.websocket.servers.commands.ContainerCommand;
 import org.eclipse.jetty.test.websocket.servers.commands.EchoCommand;
+import org.eclipse.jetty.test.websocket.servers.commands.ManyRandomJsonMessagesCommand;
 import org.eclipse.jetty.test.websocket.servers.commands.ManyRandomTextMessagesCommand;
 import org.eclipse.jetty.test.websocket.servers.commands.ThreadedManyRandomTextMessagesCommand;
 import org.eclipse.jetty.test.websocket.servers.commands.TimeCommand;
@@ -67,12 +69,15 @@ public class CommandSocket
         // Establish Commands
         commands.add(new CategoriesCommand(commands));
         commands.add(new CategoryConfigsCommand(commands));
-
+        
         commands.add(new BrowserInfoCommand());
         commands.add(new TimeCommand());
+        commands.add(new ManyRandomJsonMessagesCommand());
         commands.add(new ManyRandomTextMessagesCommand());
         commands.add(new ThreadedManyRandomTextMessagesCommand());
         commands.add(new EchoCommand());
+        
+        commands.add(new ContainerCommand(session));
 
         // Init Commands
         commands.open(this.session,this.remote);

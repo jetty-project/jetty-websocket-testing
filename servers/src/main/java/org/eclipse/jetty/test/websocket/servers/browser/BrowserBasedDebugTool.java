@@ -79,7 +79,7 @@ public class BrowserBasedDebugTool
     private void runForever() throws Exception
     {
         server.start();
-        server.dumpStdErr();
+        // server.dumpStdErr();
         LOG.info("Server available.");
         server.join();
     }
