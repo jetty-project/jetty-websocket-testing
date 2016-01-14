@@ -71,6 +71,12 @@ var wstool = {
         console.appendChild(spanText);
         console.appendChild(lineBreak);
         console.scrollTop = console.scrollHeight - console.clientHeight;
+        
+        var children = console.childNodes;
+        var extra = children.length - 1000;
+        for(i=0; i<extra; i++) {
+            children[i].parentNode.removeChild(children[i]);
+        }
     },
 
     info : function(message) {
