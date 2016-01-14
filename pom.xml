@@ -11,7 +11,7 @@
   </description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jetty-version>9.1.0-SNAPSHOT</jetty-version>
+    <jetty-version>9.3.7.RC0</jetty-version>
   </properties>
   <modules>
     <module>servers</module>
@@ -24,8 +24,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
     </plugins>
@@ -41,18 +41,6 @@
       </snapshots>
       <releases>
         <enabled>false</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>oss.sonatype.org staging</id>
-      <name>Staging Repository</name>
-      <layout>default</layout>
-      <url>https://oss.sonatype.org/content/groups/staging</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
       </releases>
     </repository>
   </repositories>

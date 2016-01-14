@@ -1,0 +1,48 @@
+body {
+	font-family: sans-serif;
+}
+
+div {
+    border: 0px solid black;	
+}
+
+div#commands div.command,
+div.buttons {
+	margin-top: 4px;
+}
+
+div#commands div.command .title,
+div.buttons .title {
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+div#commands div.command input {
+	margin-right: 5px;
+}
+
+div#console {
+    clear: both;
+    width: 40em;
+    height: 20em;
+    overflow: auto;
+    background-color: #f0f0f0;
+    padding: 4px;
+    border: 1px solid black;
+}
+
+div#console .info {
+	color: black;
+}
+
+div#console .error {
+    color: red;
+}
+
+div#console .client {
+	color: blue;
+}
+
+div#console .server {
+    color: magenta;
+}
